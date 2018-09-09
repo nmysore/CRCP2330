@@ -10,17 +10,18 @@
 
 CHIP Or8Way {
     IN in[8];
-    OUT out
-; 
+    OUT out; 
+
+
     PARTS:
     // Put your code here:
-  /*Or(a=a[0], b=a[1], out=out1);
+   /* Or(a=a[0], b=a[1], out=out1);
     Or(a=a[2], b=a[3], out=out2);
     Or(a=a[4], b=a[5], out=out3);
     Or(a=a[6], b=a[7], out=out4);
     Or(a=out1, b=out2, out=out5);
     Or(a=out3, b=out4, out=out6);
-    Or(a=out5, b=out6, out=out);*/
+    Or(a=out5, b=out6, out=out); */
 
  
   /* x= Or(a=a[0], b=a[1], out=out1);
@@ -31,15 +32,26 @@ CHIP Or8Way {
    r= Or(a=p, b=q, out=out6); */
 
 
-   /* Or( a=(Or(a=(Or(a=a[0], b=a[1], out=out1)), b= (Or(a=a[2], b=a[3], out=out2)), out=outA) , b= Or(a= (Or(a=a[4], b=a[5], out=out3)), b= (Or(a=a[6], b=a[7], out=out4)), out=outB), out= outC ; 
+   /* Or( a=(Or(a=(Or(a=a[0], b=a[1], out=out1)), b= (Or(a=a[2], b=a[3], out=out2)), out=outA) , b= Or(a= (Or(a=a[4], b=a[5], out=out3)), b= (Or(a=a[6], b=a[7], out=out4)), out=outB), out= outC ; */
 
 
-    Or(a= (Or(a=a[4], b=a[5], out=out3)), b= (Or(a=a[6], b=a[7], out=out4)), out=outB);
+    /*Or(a= (Or(a=a[4], b=a[5], out=out3)), b= (Or(a=a[6], b=a[7], out=out4)), out=outB);
 
     Or(a=outA, b=outB, out=outC);*/
 
 
 
-    Or(a=z, b=r, out=out);
+  //  Or(a=z, b=r, out=out);
+
+
+
+
+    Or(a=in[0], b=in[1], out=out1);
+    Or(a=in[2], b=in[3], out=out2);
+    Or(a=in[4], b=in[5], out=out3);
+    Or(a=in[6], b=in[7], out=out4);
+    Or(a=out1, b=out2, out=out5);
+    Or(a=out3, b=out4, out=out6);
+    Or(a=out5, b=out6, out=out);
 
 }
