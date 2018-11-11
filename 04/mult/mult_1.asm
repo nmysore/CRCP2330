@@ -16,19 +16,20 @@ M=D
 //M=0
 @R2 //our product
 M=0
+D=M
 (LOOP)
 @R1 
-D=M
-@R2
-M=M+D 
+D=D+M
+//@R2
+//M=M+D 
 @i
-D=M-1
+M=M-1
 //@R0
 //D=M
 //@i
 //M=M-1
 //D=M
-D;JGT
+M;JGT
 @LOOP
 0;JMP
 //D=D+M
