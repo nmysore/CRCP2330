@@ -9,7 +9,7 @@
 // Put your code here.
 
 
-@R0
+@R1
 D=M
 @i
 M=D
@@ -17,18 +17,25 @@ M=D
 @R2 //our product
 M=0
 (LOOP)
-@R1 
-D=M
-@R2
-M=M+D 
 @i
-D=M-1
-//@R0
-//D=M
+D=M
+@END
+D; JEQ
+@R1 
+D=D-A
+//@R2
+//M=M+D 
+@i
+M=D
+@R2
+D=M
+@R0
+D=D+M
+@R2
+M=D
 //@i
 //M=M-1
 //D=M
-D;JGT
 @LOOP
 0;JMP
 //D=D+M
