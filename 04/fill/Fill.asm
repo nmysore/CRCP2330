@@ -12,3 +12,41 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+
+@SCREEN
+M=-1
+@16512
+M=-1
+
+
+//(BLACK)
+//@scrncolor
+//M=1
+
+//(WHITE)
+//@scrncolor
+//M=0
+
+
+//@8192
+//D=M
+//@numpixels
+//M=D
+//@currentpixel
+//M=0
+
+//@SCREEN
+//D=A
+//@currentpixel 
+//M=D
+//@SCREEN
+//M=0
+//M=-1
+//@24576
+//D=A
+
+
+//@BLACK
+//D; JNE
+
