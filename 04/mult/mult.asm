@@ -7,12 +7,26 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
+
+(LOOP)
+@i
+M=R0
+@R2 //our product
+M=0
+
 @R1 
-D=M 
-@R0
-D=D+M
+D=M
 @R2
-M=D
+M=M+D 
+@R0
+@i
+M=M-1
+D=M
+D;JGT
+@LOOP
+/*D=D+M
+@R2
+M=D*/
 (END)
 @END 
 0; JMP
