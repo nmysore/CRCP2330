@@ -19,8 +19,7 @@
 //@16512
 //M=-1
 
-
-
+(LOOP)
 @8192 //512 pixels of 16 words each
 D=A
 @numpixels
@@ -36,11 +35,13 @@ M=D
 //M=0
 //M=-1
 
-(LOOP)
-@24576
+
+@KBD
 D=M
+@WHITE
+D; JEQ
 @BLACK
-D; JNE
+0; JMP
 
 
 (BLACK)
@@ -48,13 +49,29 @@ D; JNE
 M=-1
 D=M
 
+@fill
+0;JMP
+
 (WHITE)
 @scrncolor
 M=0
 D=M
 
+@fill
+0; JMP
+
+
+(fill)
+@scrncolor
+D=M
+
+
 @currentpixel
-A=D
+A=M
+M=D
+
+
+@currentpixel
 M=M+1
 
 @numpixels
@@ -62,9 +79,11 @@ M=M-1
 D=M
 
 @LOOP
-D; JGT
+D; JEQ
+
+@fill
+0; JMP
 
 (END)
 @END 
 0; JMP
-
