@@ -14,39 +14,54 @@
 // Put your code here.
 
 
-@SCREEN
-M=-1
-@16512
-M=-1
+//@SCREEN
+//M=-1
+//@16512
+//M=-1
 
 
-//(BLACK)
-//@scrncolor
-//M=1
 
-//(WHITE)
-//@scrncolor
-//M=0
-
-
-//@8192
-//D=M
-//@numpixels
-//M=D
+@8192 //512 pixels of 16 words each
+D=A
+@numpixels
+M=D
 //@currentpixel
 //M=0
 
-//@SCREEN
-//D=A
-//@currentpixel 
-//M=D
+@SCREEN
+D=A
+@currentpixel 
+M=D
 //@SCREEN
 //M=0
 //M=-1
-//@24576
-//D=A
+(LOOP)
+@24576
+D=M
+@BLACK
+D; JNE
 
 
-//@BLACK
-//D; JNE
+(BLACK)
+@scrncolor
+M=-1
+D=M
+
+(WHITE)
+@scrncolor
+M=0
+D=M
+
+@currentpixel
+A=D
+M=M+1
+
+@numpixels
+M=M-1
+D=M
+
+@LOOP
+D; JGT
+
+
 
