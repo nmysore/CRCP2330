@@ -35,6 +35,7 @@ M=D
 //@SCREEN
 //M=0
 //M=-1
+
 (LOOP)
 @24576
 D=M
@@ -63,5 +64,7 @@ D=M
 @LOOP
 D; JGT
 
-
+(END)
+@END 
+0; JMP
 
