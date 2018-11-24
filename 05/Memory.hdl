@@ -28,4 +28,9 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+
+    RAM16K(in=in, load=ram, address=address[0..15], out=ramO);
+    Screen(in=in, load=screenL, address=address[0..15], out=screenO );
+    Keyboard(out=keyboardO); 
+    
 }
