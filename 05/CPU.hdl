@@ -43,5 +43,7 @@ CHIP CPU {
     Mux16(a[0..15], b=ALUplug, sel=instruction[15], out=muxO);
     ARegister(in=muxO, load=load1, out[0..15]= a2); 
     Mux16(a=a2, b=inM[16], sel=instruction[0..15], out=a/m); 
+    DRegister(in=ALUplug, load=loadD, out=d2);
+    ALU(x=d2, y=a/m, zx=instruction[0..15], nx=instruction[0..15], zy=instruction[0..15], ny=instruction[0..15], f=instruction[0..15], no=instruction[0..15], out=ALUO, out=MO, zr=outzr, ng=outng); 
 
 }
