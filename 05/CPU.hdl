@@ -45,10 +45,10 @@ CHIP CPU {
     Or(a=aI, b=instruction[1], out=load1);
     ARegister(in=muxO, load=load1, out[0..15]=aM); 
 
-    Mux16(a=a2, b=inM[16], sel=instruction[0..15], out=a/m); 
+    Mux16(a=aM, b=inM[0..15], sel=instruction[2], out=aOrinM); 
+    And(a=instruction[3], b=instruction[0], out=inputD);
+    DRegister(in=ALUplug, load=inputD, out=dIn);
 
-    DRegister(in=ALUplug, load=loadD, out=d2);
-
-    ALU(x=d2, y=a/m, zx=instruction[0..15], nx=instruction[0..15], zy=instruction[0..15], ny=instruction[0..15], f=instruction[0..15], no=instruction[0..15], out=ALUO, out=MO, zr=outzr, ng=outng); 
+    ALU(x=dIn, y=aOrinM, zx=instruction[4], nx=instruction[5], zy=instruction[6], ny=instruction[7], f=instruction[8], no=instruction[9], out=ALUplug, out=MO, zr=outzr, ng=outng); 
 
 }
