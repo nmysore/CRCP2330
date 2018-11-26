@@ -40,41 +40,19 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Mux16(a[0]= false, a[1..15]=instruction[0..14], b=ALUplug, sel=instruction[0], out=muxO);
+    Not(in=instruction[0], out=aI);
+    Or(a=aI, b=instruction[1], out=load1);
+    ARegister(in=muxO, load=load1, out[0..15]=aM); 
 
-    //  i  X  X  a  c  c  c  c  c  c  d  d  d  j  j  j
-    // 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
-
-    Mux16(a[15]= false, a[0..14]=instruction[0..14], b=ALUplug, sel=instruction[15], out=muxO);
-    Not(in=instruction[15], out=aI);
-    Or(a=aI, b=instruction[5], out=load1);
-    ARegister(in=muxO, load=load1, out=aM, out[0..14]=addressM); 
-
-    Mux16(a=aM, b=inM, sel=instruction[12], out=aOrinM); 
-    And(a=instruction[4], b=instruction[15], out=inputD);
+    Mux16(a=aM, b=inM[0..15], sel=instruction[2], out=aOrinM); 
+    And(a=instruction[3], b=instruction[0], out=inputD);
     DRegister(in=ALUplug, load=inputD, out=dOut);
 
-    ALU(x=dOut, y=aOrinM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUplug, out=outM, zr=outzr, ng=outng); 
+    ALU(x=dOut, y=aOrinM, zx=instruction[4], nx=instruction[5], zy=instruction[6], ny=instruction[7], f=instruction[8], no=instruction[9], out=ALUplug, out=MO, zr=outzr, ng=outng); 
 
-  //  Not16(in=aM, out=notaM);
-   // Not16(in=notaM, out[0..14]=addressM); 
-
-    And(a=instruction[3], b=instruction[15], out=writeM);
-
-    Or(a=outng, b=outzr, out=lEQ);
-    Not(in=lEQ, out=gt);
-    
-    And(a=instruction[1], b=outzr, out=eq); 
-    And(a=instruction[2], b=outng, out=lt); 
-    And(a=instruction[0], b=gt, out=jgt); 
-    Or(a=lt, b=eq, out=le);
-    Or(a=le, b=jgt, out=jmp);
-    And(a=instruction[15], b=jmp, out=loadPc); 
-    Not(in=loadPc, out=incPc);
-    PC(in=aM, load=loadPc, inc=incPc, reset=reset, out[0..14]=pc);
-
-    //Or(a=)
-    
-    //PC(in=addressM, load=)
+    Not16(in=aM, out=notaM);
+    Not16(in=notaM, out[0..14]=addressM); 
 
 
 
