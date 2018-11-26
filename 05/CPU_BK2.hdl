@@ -40,10 +40,6 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
-
-    //  i  X  X  a  c  c  c  c  c  c  d  d  d  j  j  j
-    // 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
-
     Mux16(a[15]= false, a[0..14]=instruction[0..14], b=ALUplug, sel=instruction[15], out=muxO);
     Not(in=instruction[15], out=aI);
     Or(a=aI, b=instruction[5], out=load1);
@@ -53,22 +49,22 @@ CHIP CPU {
     And(a=instruction[4], b=instruction[15], out=inputD);
     DRegister(in=ALUplug, load=inputD, out=dOut);
 
-    ALU(x=dOut, y=aOrinM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUplug, out=outM, zr=outzr, ng=outng); 
+    ALU(x=dOut, y=aOrinM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUplug, out=MO, zr=outzr, ng=outng); 
 
   //  Not16(in=aM, out=notaM);
    // Not16(in=notaM, out[0..14]=addressM); 
 
     And(a=instruction[3], b=instruction[15], out=writeM);
 
-    Or(a=outng, b=outzr, out=lEQ);
-    Not(in=lEQ, out=gt);
+    Or(a=outng, b=outzr, out=lte);
+    Not(in=lte, out=gt);
     
-    And(a=instruction[1], b=outzr, out=eq); 
-    And(a=instruction[2], b=outng, out=lt); 
-    And(a=instruction[0], b=gt, out=jgt); 
-    Or(a=lt, b=eq, out=le);
-    Or(a=le, b=jgt, out=jmp);
-    And(a=instruction[15], b=jmp, out=loadPc); 
+    And(a=instruction[1], b=outzr, out=jeq); // if JEQ and out == 0
+    And(a=instruction[2], b=outng, out=jlt); // if JLT and out < 0
+    And(a=instruction[0], b=gt, out=jgt); // if JGT and out > 0       
+    Or(a=jlt, b=jeq, out=jle);
+    Or(a=jle, b=jgt, out=jmp);
+    And(a=instruction[15], b=jmp, out=loadPc); // only load PC if C-inst and other conditions met
     Not(in=loadPc, out=incPc);
     PC(in=aM, load=loadPc, inc=incPc, reset=reset, out[0..14]=pc);
 
