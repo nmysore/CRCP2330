@@ -27,12 +27,34 @@ class Square {
    /** Draws the square on the screen. */
    method void draw() {
       do Screen.setColor(true);
+     // do Screen.printInt(1);
      // do Screen.drawRectangle(x, y, x + size, y + size);
       do Screen.drawLine(135,85,362,85);
       do Screen.drawLine(210,25,210,210);
       do Screen.drawLine(135,150,362,150);
       do Screen.drawLine(290,25,290,210);
+      do Output.moveCursor(5, 21);
+      do Output.printInt(1);
+      do Output.moveCursor(5, 31);
+      do Output.printInt(2);
+      do Output.moveCursor(5, 41);
+      do Output.printInt(3);
 
+      do Output.moveCursor(10, 21);
+      do Output.printInt(4);
+      do Output.moveCursor(10, 31);
+      do Output.printInt(5);
+      do Output.moveCursor(10, 41);
+      do Output.printInt(6);
+      
+
+      do Output.moveCursor(16, 21);
+      do Output.printInt(7);
+      do Output.moveCursor(16, 31);
+      do Output.printInt(8);
+      do Output.moveCursor(16, 41);
+      do Output.printInt(9);
+      
       return;
    }
 
