@@ -8,7 +8,7 @@ class TTT {
    /** Constructs a new square with a given location and size. */
    constructor TTT new() {
       do draw();
-      do getKbdData();
+     // do getKbdData();
       return this;
    }
 

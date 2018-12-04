@@ -1,0 +1,65 @@
+
+// Implements the Tic Tac Toe game.
+ 
+
+class TTTGame {
+   field TTT ttt; 
+
+   field int player1score;
+   field int player2score;
+
+   /** Constructs a new Square Game. */
+   constructor TTTGame new() {
+   
+   let ttt = TTT.new();
+
+   let player1score=0; 
+   let player2score=0;
+   return this;
+   }
+
+   /** Disposes this game. */
+  /* method void dispose() {
+      do TTT.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }*/
+
+
+
+   /** Runs the game: handles the user's inputs and moves the square accordingly */
+   method void run() {
+      var char key;  // the key currently pressed by the user
+      var boolean exit;
+      let exit = false;
+      var int i=1;
+
+
+      while (~exit) {
+         // waits for a key to be pressed
+         while (i < 9) {
+            //let key = Keyboard.keyPressed();
+            do getKbdData();
+            do i = i + 1; 
+         }
+         //if (key = 0)  { let exit = true; }     // q key
+         //if (key = 90)  { do square.decSize(); } // z key
+         //if (key = 88)  { do square.incSize(); } // x key
+         //if (key = 131) { let direction = 1; }   // up arrow
+         //if (key = 133) { let direction = 2; }   // down arrow
+         //if (key = 130) { let direction = 3; }   // left arrow
+         //if (key = 132) { let direction = 4; }   // right arrow
+
+         // waits for the key to be released
+        /* while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            do moveSquare();
+         }*/
+      }
+     return;
+   }
+   
+}
+
+
+
