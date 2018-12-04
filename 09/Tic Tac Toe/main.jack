@@ -1,0 +1,9 @@
+class Main {
+    function void main() {
+        var TTTGame game;
+        let game = TTTGame.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
