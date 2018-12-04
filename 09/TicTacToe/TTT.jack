@@ -4,10 +4,22 @@ class TTT {
 
   field int x, y; // screen location of the square's top-left corner
   field int size; // length of this square, in pixels
-
+ 
+  field Array scoreBoard;
+  field int length; 
+ // field int score; 
    /** Constructs a new square with a given location and size. */
    constructor TTT new() {
+      var int i; 
+      let i=0;
       do draw();
+      let length=9; 
+      let scoreBoard= Array.new(length);
+      while(i < length){
+      let scoreBoard[i] = " ";
+      let i= i + 1; 
+      }
+
      // do getKbdData();
       return this;
    }
@@ -70,31 +82,66 @@ class TTT {
    } 
 
 
+   method bool recordPlay(int player, int cellNumber)
+   {
+   var char cellData;
+   var int index;
+   let cellData = scoreBoard[cellNumber-1];
+   let index = cellNumber - 1;
+  // if(scoreBoard[cellNumber] = " ")
+ //  if(cellData = " ")
+  // { 
+      if(player=1)
+      {
+         //let scoreBoard[cellNumber - 1] = "X";
+         let scoreBoard[index] = "X";
+      }
+      else
+      {
+         //let scoreBoard[cellNumber - 1] = "O";
+         let scoreBoard[index] = "O";
+      }
+ //  }
+ //  else
+ //  {
+ //     return false; //Cell already played   
+ //  }
+      return true; //Cell score recorded 
+
+   //return score;
+   }
 
 
 
 
-   method void setGameCell(int player, int cellNumber)
+
+   method int setGameCell(int player, int cellNumber)
    {
 
-   // var int x;
-   //  do Output.moveCursor(2, 45); 
-   //  let x= Keyboard.readInt("Press a Key 1-9");
-
-
+     // var int score;
+     // let score = this.recordPlay(player, cellNumber); 
+   //  var bool goodPlay;
+   //  let goodPlay = this.recordPlay(player, cellNumber);
+ //  if((this.recordPlay(player, cellNumber) = true))
+  // {
+ /*  if(~(goodPlay))
+   {
+    return 0;
+   }*/
+   
      if(cellNumber=1)
      {
        do Output.moveCursor(5, 21);
      
-     if(player=1)
-     {
-      do Output.printString("X");
-     }
-     else 
-     {
-      do Output.printString("O");
+      if(player=1)
+      {
+         do Output.printString("X");
       }
-}
+      else 
+      {
+         do Output.printString("O");
+      }
+   }
     if(cellNumber=2)
      {
        do Output.moveCursor(5, 31);
@@ -211,9 +258,16 @@ class TTT {
      {
       do Output.printString("O");
       }
-}
-      return;
+
+//}
+/* else{
+   
+   return 0; 
+} */
+      
    }
+ return 1;
+}
      
     
     

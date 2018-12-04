@@ -15,7 +15,7 @@ class Square {
       let y = Ay;
       let size = Asize;
       do draw();
-      do getkbdData();
+      do getKbdData();
       return this;
    }
 
@@ -61,10 +61,10 @@ class Square {
       return;
    }
 
-   method void getkbdData(){
+   method void getKbdData(){
 
     var int x;
-    do Output.moveCursor(2, 45); 
+     do Output.moveCursor(2, 45); 
      let x= Keyboard.readInt("Press a Key 1-9");
 
      if(x=1){

@@ -8,7 +8,7 @@ class TTTGame {
    field int player1score;
    field int player2score;
 
-   /** Constructs a new Square Game. */
+   /** Constructs a new TTT Game. */
    constructor TTTGame new() {
    
    let ttt = TTT.new();
@@ -35,6 +35,7 @@ class TTTGame {
       var int player; 
       var int player1;
       var int player2; 
+      var int scoreB;
 
       let exit = false;
       let input = 0; 
@@ -42,10 +43,11 @@ class TTTGame {
 
       while (~exit) {
          // waits for a key to be pressed
-
+         
          let player1=1; 
          let player2=2;
          let player=player1;
+
          while (input < 9) {
             //let key = Keyboard.keyPressed();
            // do ttt.getKbdData();
@@ -53,7 +55,13 @@ class TTTGame {
              do Output.moveCursor(20, 5); 
              let key= Keyboard.readInt("Press a Key 1-9 : ");
              do ttt.setGameCell(player, key);
-
+            /* scoreB = ttt.setGameCell(player, key)
+           while(scoreB=0)
+            {
+             let key= Keyboard.readInt("Key already pressed, choose another : ");
+             do ttt.setGameCell(player, key);
+            } */
+     
             if(player=player1){
             let player=player2;
             } 
@@ -64,19 +72,7 @@ class TTTGame {
 
             let input = input + 1;
          }
-         //if (key = 0)  { let exit = true; }     // q key
-         //if (key = 90)  { do square.decSize(); } // z key
-         //if (key = 88)  { do square.incSize(); } // x key
-         //if (key = 131) { let direction = 1; }   // up arrow
-         //if (key = 133) { let direction = 2; }   // down arrow
-         //if (key = 130) { let direction = 3; }   // left arrow
-         //if (key = 132) { let direction = 4; }   // right arrow
-
-         // waits for the key to be released
-        /* while (~(key = 0)) {
-            let key = Keyboard.keyPressed();
-            do moveSquare();
-         }*/
+        
       }
      return;
    }

@@ -10,7 +10,7 @@ push constant 0
 pop this 2
 push pointer 0
 return
-function TTTGame.run 6
+function TTTGame.run 7
 push argument 0
 pop pointer 0
 push constant 0
