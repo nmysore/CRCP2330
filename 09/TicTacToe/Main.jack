@@ -3,7 +3,7 @@ class Main {
         var TTTGame game;
         let game = TTTGame.new();
         do game.run();
-        do game.dispose();
+     //   do game.dispose();
         return;
     }
 }

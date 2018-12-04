@@ -29,18 +29,26 @@ class TTTGame {
 
    /** Runs the game: handles the user's inputs and moves the square accordingly */
    method void run() {
-      var char key;  // the key currently pressed by the user
+      var int key;  // the key currently pressed by the user
       var boolean exit;
+      var int input;
+      var int player; 
+
       let exit = false;
-      var int i=1;
+      let input = 1; 
 
 
       while (~exit) {
          // waits for a key to be pressed
-         while (i < 9) {
+
+         let player=1; 
+         while (input < 9) {
             //let key = Keyboard.keyPressed();
-            do getKbdData();
-            do i = i + 1; 
+           // do ttt.getKbdData();
+            let input = input + 1;
+             do Output.moveCursor(20, 5); 
+             let key= Keyboard.readInt("Press a Key 1-9 : ");
+             do ttt.setGameCell(player, key); 
          }
          //if (key = 0)  { let exit = true; }     // q key
          //if (key = 90)  { do square.decSize(); } // z key

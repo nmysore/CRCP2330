@@ -4,8 +4,5 @@ pop local 0
 push local 0
 call TTTGame.run 1
 pop temp 0
-push local 0
-call TTTGame.dispose 1
-pop temp 0
 push constant 0
 return
