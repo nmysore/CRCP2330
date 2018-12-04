@@ -81,10 +81,11 @@ class TTT {
    //  do Output.moveCursor(2, 45); 
    //  let x= Keyboard.readInt("Press a Key 1-9");
 
+
      if(cellNumber=1)
      {
        do Output.moveCursor(5, 21);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -93,11 +94,11 @@ class TTT {
      {
       do Output.printString("O");
       }
-
-     if(cellNumber=2)
+}
+    if(cellNumber=2)
      {
        do Output.moveCursor(5, 31);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -106,11 +107,11 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
      if(cellNumber=3)
      {
        do Output.moveCursor(5, 41);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -119,14 +120,14 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
 
 
 
       if(cellNumber=4)
      {
        do Output.moveCursor(10, 21);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -135,12 +136,12 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
 
      if(cellNumber=5)
      {
        do Output.moveCursor(10, 31);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -149,13 +150,13 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
 
 
       if(cellNumber=6)
      {
        do Output.moveCursor(10, 41);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -165,13 +166,13 @@ class TTT {
       do Output.printString("O");
       }
 
-
+}
 
 
       if(cellNumber=7)
      {
        do Output.moveCursor(16, 21);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -180,12 +181,12 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
 
        if(cellNumber=8)
      {
        do Output.moveCursor(16, 31);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -194,14 +195,14 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
 
 
 
        if(cellNumber=9)
      {
        do Output.moveCursor(16, 41);
-     }
+     
      if(player=1)
      {
       do Output.printString("X");
@@ -210,7 +211,7 @@ class TTT {
      {
       do Output.printString("O");
       }
-
+}
       return;
    }
      

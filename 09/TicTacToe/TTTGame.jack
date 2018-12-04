@@ -33,22 +33,36 @@ class TTTGame {
       var boolean exit;
       var int input;
       var int player; 
+      var int player1;
+      var int player2; 
 
       let exit = false;
-      let input = 1; 
+      let input = 0; 
 
 
       while (~exit) {
          // waits for a key to be pressed
 
-         let player=1; 
+         let player1=1; 
+         let player2=2;
+         let player=player1;
          while (input < 9) {
             //let key = Keyboard.keyPressed();
            // do ttt.getKbdData();
-            let input = input + 1;
+            
              do Output.moveCursor(20, 5); 
              let key= Keyboard.readInt("Press a Key 1-9 : ");
-             do ttt.setGameCell(player, key); 
+             do ttt.setGameCell(player, key);
+
+            if(player=player1){
+            let player=player2;
+            } 
+            else
+            {
+            let player=player1; 
+            }
+
+            let input = input + 1;
          }
          //if (key = 0)  { let exit = true; }     // q key
          //if (key = 90)  { do square.decSize(); } // z key
