@@ -15,6 +15,7 @@ class Square {
       let y = Ay;
       let size = Asize;
       do draw();
+      do getkbdData();
       return this;
    }
 
@@ -33,6 +34,7 @@ class Square {
       do Screen.drawLine(210,25,210,210);
       do Screen.drawLine(135,150,362,150);
       do Screen.drawLine(290,25,290,210);
+
       do Output.moveCursor(5, 21);
       do Output.printInt(1);
       do Output.moveCursor(5, 31);
@@ -55,9 +57,23 @@ class Square {
       do Output.moveCursor(16, 41);
       do Output.printInt(9);
       
+      
       return;
    }
 
+   method void getkbdData(){
+
+    var int x;
+    do Output.moveCursor(2, 45); 
+     let x= Keyboard.readInt("Press a Key 1-9");
+
+     if(x=1){
+       do Output.moveCursor(5, 21);
+      do Output.printString("X");
+      }
+     return;
+   } 
+    
    /** Erases the square from the screen. */
    method void erase() {
       do Screen.setColor(false);
