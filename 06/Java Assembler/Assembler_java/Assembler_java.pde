@@ -1,8 +1,8 @@
 import java.io.FileReader; 
 import java.io.IOException; 
 import java.io.BufferedReader; 
-
-
+import java.util.HashMap;
+import java.util.Map;
 
 class Assembler {
      String inputLine = null; 
@@ -10,13 +10,47 @@ class Assembler {
      String file;
      BufferedReader fileBuffer; 
      
+   private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
+     
+     
   public Assembler(String fileName) throws IOException{
    file = fileName;  
    if (file != null)
      
   fileBuffer = new BufferedReader(new FileReader(file));
-}
   
+  initializeSymbols(symbolTable);
+}
+ 
+  private void initializeSymbols(Map hashTable){
+    
+    //mapping addresses of predefined symbols 
+    hashTable.put("SP", 0);
+    hashTable.put("LCL", 1);
+    hashTable.put("ARG", 2);
+    hashTable.put("THIS", 3);
+    hashTable.put("THAT", 4);
+    
+    hashTable.put("R0", 0);
+    hashTable.put("R1", 1);
+    hashTable.put("R2", 2);
+    hashTable.put("R3", 3);
+    hashTable.put("R4", 4);
+    hashTable.put("R5", 5);
+    hashTable.put("R6", 6);
+    hashTable.put("R7", 7);
+    hashTable.put("R8", 8);
+    hashTable.put("R9", 9);
+    hashTable.put("R10", 10);
+    hashTable.put("R11", 11);
+    hashTable.put("R12", 12);
+    hashTable.put("R13", 13);
+    hashTable.put("R14", 14);
+    hashTable.put("R15", 15);
+    
+    hashTable.put("SCREEN", 16384);
+    hashTable.put("KBD", 24576);
+  }
   
   public String getLine() throws IOException{
     String line = "Error";
