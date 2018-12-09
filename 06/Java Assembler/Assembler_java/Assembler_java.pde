@@ -15,24 +15,18 @@ class Assembler {
    if (file != null)
      
   fileBuffer = new BufferedReader(new FileReader(file));
- 
- //inputLine = getLine();
-  }
+}
   
   
   public String getLine() throws IOException{
     String line = "Error";
-  // while(true) {
-      line = fileBuffer.readLine();
-      if (line == null) {
-        fileBuffer.close();
-        return line;
-      }
- //  if (line.length() == 0)
-   //     continue;
+    line = fileBuffer.readLine();
+    if (line == null) {
+      fileBuffer.close();
       return line;
-//  }
-  }
+    }
+    return line;
+}
 
 }
 
@@ -56,23 +50,23 @@ void setup() {
  
  try{
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
-// while(true){
- while(!eof){
+  while(!eof){
   inputLine =  aAssembler.getLine();
   if (inputLine == null){
    eof=true;
-//   continue;
- }
- System.out.println(inputLine);
+   continue;
+  }
+  System.out.println(inputLine);
+  //remove comments
+  inputLine = inputLine.replaceAll("\\s","");
+  inputLine = inputLine.replaceAll("//","");
+  inputLine = inputLine.replaceAll("/\\*","");
+  System.out.println(inputLine);
  }
  } 
  catch(IOException ex1){
    ex1.printStackTrace();
  }
-
- 
-
-// return;
- System.out.println(inputLine);
+// System.out.println(inputLine);
  return;
 }
