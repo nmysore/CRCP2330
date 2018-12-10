@@ -15,6 +15,7 @@ class Assembler {
      int L_COMMAND = 2; 
      
      int currentLine = 0; 
+     int currentAddress = 16; //address 16 to 16383 are available for non=predefined symbols
      
    private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
    private Map<String, Integer> compTable = new HashMap<String,Integer>(100);
@@ -47,7 +48,8 @@ class Assembler {
        }else
        {
         if(commandType == L_COMMAND){
-          
+          if (!symbolTable.containsKey(codeLine.substring(1, codeLine.length()-1)))
+            symbolTable.put(codeLine.substring(1, codeLine.length()-1), currentLine);
         }
        }
        codeLine = getLine(); 
@@ -56,24 +58,36 @@ class Assembler {
    
     public void parserNextPass() throws IOException{
      String codeLine = getLine(); 
+//     String hackOut;
      int commandType; 
      while(codeLine != null){
        commandType = getCommand(codeLine);
-       if(commandType == A_COMMAND || commandType == C_COMMAND){
-         currentLine++;
-        System.out.println("Command = " + commandType + " --- Code = " + codeLine); 
+       if(commandType == A_COMMAND){
+         String instructionA = codeLine.substring(1);
+         Integer address=0;
+         if(!Character.isDigit(instructionA.charAt(0))){
+           if (!symbolTable.containsKey(instructionA)){
+            symbolTable.put(instructionA, currentAddress);
+            address = currentAddress;
+            currentAddress++;
+           }else
+             address = symbolTable.get(instructionA);
+         }
+           System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
+           
+         }else
+         {
+          if(commandType == L_COMMAND){
+
+          }
+       // System.out.println("Command = " + commandType + " --- Code = " + codeLine); 
         // System.out.println(codeLine);
        // codeLine = getLine(); 
-       }else
-       {
-        if(commandType == L_COMMAND){
-          if (!symbolTable.containsKey(codeLine.substring(1, codeLine.length()-1)))
-            symbolTable.put(codeLine.substring(1, codeLine.length()-1), currentLine);
-        }
        }
-       codeLine = getLine(); 
+       }
+   //    codeLine = getLine(); 
      }
-   }
+//   }
      
    
    
@@ -213,7 +227,7 @@ void setup() {
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
   aAssembler.parserFirstPass(); 
   while(!eof){
-  inputLine =  aAssembler.getLine();
+  //inputLine =  aAssembler.getLine();
   if (inputLine == null){
    eof=true;
    continue;
@@ -224,8 +238,8 @@ void setup() {
   System.out.println(inputLine);
   //remove comments
   inputLine = inputLine.replaceAll("\\s","");
-  inputLine = inputLine.replaceAll("//","");
-  inputLine = inputLine.replaceAll("/\\*","");
+ // inputLine = inputLine.replaceAll("//","");
+ // inputLine = inputLine.replaceAll("/\\*","");
   System.out.println(inputLine);
  }
  } 
