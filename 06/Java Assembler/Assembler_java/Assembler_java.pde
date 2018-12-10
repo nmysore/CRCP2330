@@ -17,6 +17,9 @@ class Assembler {
      int currentLine = 0; 
      
    private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
+   private Map<String, Integer> compTable = new HashMap<String,Integer>(100);
+   private Map<String, Integer> destTable = new HashMap<String,Integer>(100);
+   private Map<String, Integer> jumpTable = new HashMap<String,Integer>(100);
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
@@ -25,7 +28,9 @@ class Assembler {
   fileBuffer = new BufferedReader(new FileReader(file));
   
   initializeSymbols(symbolTable); 
-  
+  initializeComp(compTable);
+  initializeDest(destTable);
+  initializeJump(jumpTable); 
 }
 
 
@@ -36,11 +41,41 @@ class Assembler {
        commandType = getCommand(codeLine);
        if(commandType == A_COMMAND || commandType == C_COMMAND){
          currentLine++;
-         System.out.println("Command = " + commandType + "---Code = " + codeLine); 
+        System.out.println("Command = " + commandType + "---Code = " + codeLine); 
         // System.out.println(codeLine);
+       // codeLine = getLine(); 
+       }else
+       {
+        if(commandType == L_COMMAND){
+          
+        }
        }
+       codeLine = getLine(); 
      }
    }
+   
+    public void parserNextPass() throws IOException{
+     String codeLine = getLine(); 
+     int commandType; 
+     while(codeLine != null){
+       commandType = getCommand(codeLine);
+       if(commandType == A_COMMAND || commandType == C_COMMAND){
+         currentLine++;
+        System.out.println("Command = " + commandType + " --- Code = " + codeLine); 
+        // System.out.println(codeLine);
+       // codeLine = getLine(); 
+       }else
+       {
+        if(commandType == L_COMMAND){
+          if (!symbolTable.containsKey(codeLine.substring(1, codeLine.length()-1)))
+            symbolTable.put(codeLine.substring(1, codeLine.length()-1), currentLine);
+        }
+       }
+       codeLine = getLine(); 
+     }
+   }
+     
+   
    
   private void initializeSymbols(Map hashTable){
     
@@ -70,6 +105,61 @@ class Assembler {
     
     hashTable.put("SCREEN", 16384);
     hashTable.put("KBD", 24576);
+  }
+  
+   private void initializeComp(Map compTable){
+   //mapping comps using binary literals
+    compTable.put("0", 0b0101010);
+    compTable.put("1", 0b0111111);
+    compTable.put("-1", 0b0111010);
+    compTable.put("D", 0b0001100);
+    compTable.put("A", 0b0110000);
+    compTable.put("!D", 0b0001101);
+    compTable.put("!A", 0b0110001);
+    compTable.put("-D", 0b0001111);
+    compTable.put("-A", 0b0110011);
+    compTable.put("D+1", 0b0011111);
+    compTable.put("A+1", 0b0110111);
+    compTable.put("D-1", 0b0001110);
+    compTable.put("A-1", 0b0110010);
+    compTable.put("D+A", 0b0000010);
+    compTable.put("D-A", 0b0010011);
+    compTable.put("A-D", 0b0000111);
+    compTable.put("D&A", 0b0000000);
+    compTable.put("D|A", 0b0010101);
+    compTable.put("M", 0b1110000);
+    compTable.put("!M", 0b1110001);
+    compTable.put("-M", 0b1110011);
+    compTable.put("M+1", 0b1110111);
+    compTable.put("M-1", 0b1110010);
+    compTable.put("D+M", 0b1000010);
+    compTable.put("D-M", 0b1010011);
+    compTable.put("M-D", 0b1000111);
+    compTable.put("D&M", 0b1000000);
+    compTable.put("D|M", 0b1010101);
+    
+   }
+  
+  private void initializeDest(Map destTable){
+     destTable.put("null", 0b000);
+     destTable.put("M", 0b001);
+     destTable.put("D", 0b010);
+     destTable.put("MD", 0b011);
+     destTable.put("A", 0b100);
+     destTable.put("AM", 0b101);
+     destTable.put("AD", 0b110);
+     destTable.put("AMD", 0b111);
+  }
+  
+  private void initializeJump(Map jumpTable){ 
+     jumpTable.put("null", 0b000);
+     jumpTable.put("JGT", 0b001);
+     jumpTable.put("JEQ", 0b010);
+     jumpTable.put("JGE", 0b011);
+     jumpTable.put("JLT", 0b100);
+     jumpTable.put("JNE", 0b101);
+     jumpTable.put("JLE", 0b110);
+     jumpTable.put("JMP", 0b111);
   }
   
   public String getLine() throws IOException{
@@ -127,6 +217,9 @@ void setup() {
   if (inputLine == null){
    eof=true;
    continue;
+  }else
+  {
+   aAssembler.parserNextPass(); 
   }
   System.out.println(inputLine);
   //remove comments

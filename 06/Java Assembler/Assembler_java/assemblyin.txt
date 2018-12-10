@@ -1,3 +1,4 @@
-Moron is you
-//I am stupid
-/*here I am..
+@Moron is you
+(Loop)
+@I am stupid
+here I am..
