@@ -10,8 +10,13 @@ class Assembler {
      String file;
      BufferedReader fileBuffer; 
      
-   private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
+     int A_COMMAND = 0;
+     int C_COMMAND = 1;
+     int L_COMMAND = 2; 
      
+     int currentLine = 0; 
+     
+   private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
@@ -19,9 +24,24 @@ class Assembler {
      
   fileBuffer = new BufferedReader(new FileReader(file));
   
-  initializeSymbols(symbolTable);
+  initializeSymbols(symbolTable); 
+  
 }
- 
+
+
+  public void parserFirstPass() throws IOException{
+     String codeLine = getLine(); 
+     int commandType; 
+     while(codeLine != null){
+       commandType = getCommand(codeLine);
+       if(commandType == A_COMMAND || commandType == C_COMMAND){
+         currentLine++;
+         System.out.println("Command = " + commandType + "---Code = " + codeLine); 
+        // System.out.println(codeLine);
+       }
+     }
+   }
+   
   private void initializeSymbols(Map hashTable){
     
     //mapping addresses of predefined symbols 
@@ -61,7 +81,24 @@ class Assembler {
     }
     return line;
 }
-
+  
+  
+  public int getCommand(String codeLine){
+    int commandType = 9; //Error situation 
+      if(codeLine.charAt(0) == '@'){
+         commandType = A_COMMAND; 
+      }else 
+      {
+       if(codeLine.charAt(0) == '('){
+         commandType = L_COMMAND;
+       }else
+             {
+               commandType = C_COMMAND; 
+             }
+      }
+    return commandType; 
+  }
+  
 }
 
 // void setup(String args[]) {
@@ -84,6 +121,7 @@ void setup() {
  
  try{
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
+  aAssembler.parserFirstPass(); 
   while(!eof){
   inputLine =  aAssembler.getLine();
   if (inputLine == null){
