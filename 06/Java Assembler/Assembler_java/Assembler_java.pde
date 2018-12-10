@@ -18,9 +18,9 @@ class Assembler {
      int currentAddress = 16; //address 16 to 16383 are available for non=predefined symbols
      
    private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
-   private Map<String, Integer> compTable = new HashMap<String,Integer>(100);
-   private Map<String, Integer> destTable = new HashMap<String,Integer>(100);
-   private Map<String, Integer> jumpTable = new HashMap<String,Integer>(100);
+   private Map<String, String> compTable = new HashMap<String,String>(100);
+   private Map<String, String> destTable = new HashMap<String,String>(100);
+   private Map<String, String> jumpTable = new HashMap<String,String>(100);
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
@@ -52,15 +52,29 @@ class Assembler {
             symbolTable.put(codeLine.substring(1, codeLine.length()-1), currentLine);
         }
        }
+
+       System.out.println(" Finishing FirsttPass - :" + codeLine); 
        codeLine = getLine(); 
      }
-   }
+     
+   if (fileBuffer != null)
+     {
+       fileBuffer.close();
+     }
+ //    fileBuffer = new BufferedReader(new FileReader(file));
+   }  
    
     public void parserNextPass() throws IOException{
      String codeLine = getLine(); 
+     inputLine = codeLine;
+     if (inputLine == null){
+       endOfFile = true;
+     }
+     System.out.println(" In ParseNextPass - :" + codeLine); 
 //     String hackOut;
      int commandType; 
-     while(codeLine != null){
+//     while(codeLine != null){
+      if(codeLine != null){ 
        commandType = getCommand(codeLine);
        if(commandType == A_COMMAND){
          String instructionA = codeLine.substring(1);
@@ -68,13 +82,19 @@ class Assembler {
          if(!Character.isDigit(instructionA.charAt(0))){
            if (!symbolTable.containsKey(instructionA)){
             symbolTable.put(instructionA, currentAddress);
+            System.out.println(" Instr_A :" + instructionA); 
             address = currentAddress;
+            System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
             currentAddress++;
-           }else
+           }else{
              address = symbolTable.get(instructionA);
+             System.out.println("hack_Out: ");
+             System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
+           }
+         }else{
+           System.out.println("hack_Out: ");
+           System.out.println(String.format("%16s", Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0')));
          }
-           System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
-           
          }else
          {
           if(commandType == L_COMMAND){
@@ -84,8 +104,10 @@ class Assembler {
         // System.out.println(codeLine);
        // codeLine = getLine(); 
        }
-       }
+     }
    //    codeLine = getLine(); 
+      // System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
+return;
      }
 //   }
      
@@ -123,62 +145,63 @@ class Assembler {
   
    private void initializeComp(Map compTable){
    //mapping comps using binary literals
-    compTable.put("0", 0b0101010);
-    compTable.put("1", 0b0111111);
-    compTable.put("-1", 0b0111010);
-    compTable.put("D", 0b0001100);
-    compTable.put("A", 0b0110000);
-    compTable.put("!D", 0b0001101);
-    compTable.put("!A", 0b0110001);
-    compTable.put("-D", 0b0001111);
-    compTable.put("-A", 0b0110011);
-    compTable.put("D+1", 0b0011111);
-    compTable.put("A+1", 0b0110111);
-    compTable.put("D-1", 0b0001110);
-    compTable.put("A-1", 0b0110010);
-    compTable.put("D+A", 0b0000010);
-    compTable.put("D-A", 0b0010011);
-    compTable.put("A-D", 0b0000111);
-    compTable.put("D&A", 0b0000000);
-    compTable.put("D|A", 0b0010101);
-    compTable.put("M", 0b1110000);
-    compTable.put("!M", 0b1110001);
-    compTable.put("-M", 0b1110011);
-    compTable.put("M+1", 0b1110111);
-    compTable.put("M-1", 0b1110010);
-    compTable.put("D+M", 0b1000010);
-    compTable.put("D-M", 0b1010011);
-    compTable.put("M-D", 0b1000111);
-    compTable.put("D&M", 0b1000000);
-    compTable.put("D|M", 0b1010101);
+    compTable.put("0", "0b0101010");
+    compTable.put("1", "0b0111111");
+    compTable.put("-1", "0b0111010");
+    compTable.put("D", "0b0001100");
+    compTable.put("A", "0b0110000");
+    compTable.put("!D", "0b0001101");
+    compTable.put("!A", "0b0110001");
+    compTable.put("-D", "0b0001111");
+    compTable.put("-A", "0b0110011");
+    compTable.put("D+1", "0b0011111");
+    compTable.put("A+1", "0b0110111");
+    compTable.put("D-1", "0b0001110");
+    compTable.put("A-1", "0b0110010");
+    compTable.put("D+A", "0b0000010");
+    compTable.put("D-A", "0b0010011");
+    compTable.put("A-D", "0b0000111");
+    compTable.put("D&A", "0b0000000");
+    compTable.put("D|A", "0b0010101");
+    compTable.put("M", "0b1110000");
+    compTable.put("!M", "0b1110001");
+    compTable.put("-M", "0b1110011");
+    compTable.put("M+1", "0b1110111");
+    compTable.put("M-1", "0b1110010");
+    compTable.put("D+M", "0b1000010");
+    compTable.put("D-M", "0b1010011");
+    compTable.put("M-D", "0b1000111");
+    compTable.put("D&M", "0b1000000");
+    compTable.put("D|M", "0b1010101");
     
    }
   
   private void initializeDest(Map destTable){
-     destTable.put("null", 0b000);
-     destTable.put("M", 0b001);
-     destTable.put("D", 0b010);
-     destTable.put("MD", 0b011);
-     destTable.put("A", 0b100);
-     destTable.put("AM", 0b101);
-     destTable.put("AD", 0b110);
-     destTable.put("AMD", 0b111);
+     destTable.put("null", "0b000");
+     destTable.put("M", "0b001");
+     destTable.put("D", "0b010");
+     destTable.put("MD", "0b011");
+     destTable.put("A", "0b100");
+     destTable.put("AM", "0b101");
+     destTable.put("AD", "0b110");
+     destTable.put("AMD", "0b111");
   }
   
   private void initializeJump(Map jumpTable){ 
-     jumpTable.put("null", 0b000);
-     jumpTable.put("JGT", 0b001);
-     jumpTable.put("JEQ", 0b010);
-     jumpTable.put("JGE", 0b011);
-     jumpTable.put("JLT", 0b100);
-     jumpTable.put("JNE", 0b101);
-     jumpTable.put("JLE", 0b110);
-     jumpTable.put("JMP", 0b111);
+     jumpTable.put("null", "0b000");
+     jumpTable.put("JGT", "0b001");
+     jumpTable.put("JEQ", "0b010");
+     jumpTable.put("JGE", "0b011");
+     jumpTable.put("JLT", "0b100");
+     jumpTable.put("JNE", "0b101");
+     jumpTable.put("JLE", "0b110");
+     jumpTable.put("JMP", "0b111");
   }
   
   public String getLine() throws IOException{
     String line = "Error";
     line = fileBuffer.readLine();
+    System.out.println("getLine: " + line);
     if (line == null) {
       fileBuffer.close();
       return line;
@@ -219,28 +242,36 @@ void setup() {
   return;   
   } 
  }*/
- String inputLine = null;
- Boolean eof = false;
+ //String inputLine = null;
+// Boolean eof = false;
 // String file = args[0];
  
  try{
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
   aAssembler.parserFirstPass(); 
-  while(!eof){
+  System.out.println("inputLIne after first pass: " + aAssembler.inputLine);
+  System.out.println("fileBuffer after first pass: " + aAssembler.fileBuffer);
+  aAssembler.fileBuffer = new BufferedReader(new FileReader(aAssembler.file));
+  System.out.println("fileBuffer after init: " + aAssembler.fileBuffer);
+  
+  while(!aAssembler.endOfFile){
   //inputLine =  aAssembler.getLine();
-  if (inputLine == null){
-   eof=true;
-   continue;
-  }else
+   aAssembler.parserNextPass();
+   /*if (inputLine == null){
+     eof=true;
+     //continue;
+  }/*else
   {
    aAssembler.parserNextPass(); 
-  }
-  System.out.println(inputLine);
+  }*/
+  System.out.println(aAssembler.inputLine);
   //remove comments
-  inputLine = inputLine.replaceAll("\\s","");
+//  inputLine = inputLine.replaceAll("\\s","");
  // inputLine = inputLine.replaceAll("//","");
  // inputLine = inputLine.replaceAll("/\\*","");
-  System.out.println(inputLine);
+  System.out.println(aAssembler.inputLine);
+
+    
  }
  } 
  catch(IOException ex1){
