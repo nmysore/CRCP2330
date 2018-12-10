@@ -19,8 +19,8 @@ class Assembler {
      
    private Map<String, Integer> symbolTable = new HashMap<String,Integer>(100);
    private Map<String, Integer > compTable = new HashMap<String,Integer>(100);
-   private Map<String, Integer> destTable = new HashMap<String,Integer>(100);
-   private Map<String, Integer> jumpTable = new HashMap<String,Integer>(100);
+   private Map<String, String> destTable = new HashMap<String,String>(100);
+   private Map<String, String> jumpTable = new HashMap<String,String>(100);
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
@@ -102,41 +102,17 @@ class Assembler {
           //if(commandType == L_COMMAND){
             System.out.println(" Instr_A - Other COMMAND:");
             String temp = instructionA; 
-            String address2 = "0b111";
            temp = temp.replaceAll(".*=", "");
            temp = temp.replaceAll(";,*", "");
            System.out.println("comp string = " + temp); 
            System.out.println(compTable.get(temp)); 
         //  String tempAddress = Integer.toBinaryString(compTable.get(temp));
-         
          Integer tempAddress = compTable.get(temp);
-         System.out.println("tempAddress Comp= " + tempAddress);
-         if (tempAddress != null){
-           System.out.println(Integer.toBinaryString(tempAddress));
-           address2 = address2 + Integer.toBinaryString(tempAddress); 
-           System.out.println("address 2: " + address2);
-         }else
-           address2 = address2 + "0000000";
-         
-         tempAddress = destTable.get(temp);
-         if (tempAddress != null){
-           System.out.println("tempAddress Dest= " + tempAddress);
-           System.out.println(Integer.toBinaryString(tempAddress));    
-           address2 = address2 + Integer.toBinaryString(tempAddress);
-           }else 
-             address2 = address2 + "000";
-     
-          tempAddress = jumpTable.get(temp);
-         if (tempAddress != null){
-           System.out.println("tempAddress Jump= " + tempAddress);
-           System.out.println(Integer.toBinaryString(tempAddress));
-           address2 = address2 + Integer.toBinaryString(tempAddress);          
-         }else
-           address2 = address2 + "000";
-           System.out.println("address 2 Complete: " + address2);   
- 
-         }
-         
+         System.out.println("tempAddress = " + tempAddress);
+         System.out.println(Integer.toBinaryString(tempAddress));
+         String address2 = "0b111" + Integer.toBinaryString(tempAddress); 
+         System.out.println("address 2: " + address2);
+         tempAddress = 
      //     System.out.println("Shifted Address: " + address2);
    //        Integer tempInt = Integer.parseInt(tempAddress);
     //       System.out.println("tempInt = " + tempInt);
@@ -154,7 +130,7 @@ class Assembler {
        // System.out.println("Command = " + commandType + " --- Code = " + codeLine); 
         // System.out.println(codeLine);
        // codeLine = getLine(); 
-      // }
+       }
      }
    //    codeLine = getLine(); 
       // System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
@@ -196,41 +172,10 @@ return;
   
    private void initializeComp(Map compTable){
    //mapping comps using binary literals
-   /* compTable.put("M", Integer.parseInt("1110000", 2));
-    
-    compTable.put("D", Integer.parseInt("0001100" , 2));
-    compTable.put("D+A", Integer.parseInt("0000010" , 2));*/
-    
-    compTable.put("0", Integer.parseInt("0101010", 2));
-    compTable.put("1", Integer.parseInt("0111111", 2));
-    compTable.put("-1",Integer.parseInt( "0111010", 2));
-    compTable.put("D", Integer.parseInt("0001100" , 2));
-    compTable.put("A", Integer.parseInt("0110000", 2));
-    compTable.put("!D",Integer.parseInt("0001101", 2));
-    compTable.put("!A",Integer.parseInt("0110001", 2));
-    compTable.put("-D",Integer.parseInt("0001111", 2));
-    compTable.put("-A",Integer.parseInt("0110011", 2));
-    compTable.put("D+1",Integer.parseInt("0011111", 2));
-    compTable.put("A+1",Integer.parseInt("0110111", 2));
-    compTable.put("D-1",Integer.parseInt("0001110", 2));
-    compTable.put("A-1",Integer.parseInt("0110010", 2));
-    compTable.put("D+A",Integer.parseInt("0000010" , 2));
-    compTable.put("D-A",Integer.parseInt("0010011", 2));
-    compTable.put("A-D",Integer.parseInt("0000111", 2));
-    compTable.put("D&A",Integer.parseInt("0000000", 2));
-    compTable.put("D|A",Integer.parseInt("0010101", 2));
     compTable.put("M", Integer.parseInt("1110000", 2));
-    compTable.put("!M",Integer.parseInt("1110001", 2));
-    compTable.put("-M",Integer.parseInt("1110011",2));
-    compTable.put("M+1",Integer.parseInt("1110111", 2));
-    compTable.put("M-1",Integer.parseInt("1110010", 2));
-    compTable.put("D+M",Integer.parseInt("1000010", 2));
-    compTable.put("D-M",Integer.parseInt("1010011", 2));
-    compTable.put("M-D",Integer.parseInt("1000111", 2));
-    compTable.put("D&M",Integer.parseInt("1000000", 2));
-    compTable.put("D|M",Integer.parseInt("1010101", 2));
-    
-    
+    compTable.put("0", Integer.parseInt("0101010", 2));
+    compTable.put("D", Integer.parseInt("0001100" , 2));
+    compTable.put("D+A", Integer.parseInt("0000010" , 2));
  /*   compTable.put("1", "0b0111111");
     compTable.put("-1", "0b0111010");
     compTable.put("D", "0b0001100");
@@ -262,25 +207,25 @@ return;
    }
   
   private void initializeDest(Map destTable){
-     destTable.put("null", Integer.parseInt("000",2));
-     destTable.put("M", Integer.parseInt("001",2));
-     destTable.put("D", Integer.parseInt("010",2));
-     destTable.put("MD",Integer.parseInt("011",2));
-     destTable.put("A",Integer.parseInt("100", 2));
-     destTable.put("AM",Integer.parseInt("101", 2));
-     destTable.put("AD",Integer.parseInt("110",2));
-     destTable.put("AMD",Integer.parseInt("111",2));
+     destTable.put("null", "0b000");
+     destTable.put("M", "0b001");
+     destTable.put("D", "0b010");
+     destTable.put("MD", "0b011");
+     destTable.put("A", "0b100");
+     destTable.put("AM", "0b101");
+     destTable.put("AD", "0b110");
+     destTable.put("AMD", "0b111");
   }
   
   private void initializeJump(Map jumpTable){ 
-     jumpTable.put("null",Integer.parseInt("000",2));
-     jumpTable.put("JGT", Integer.parseInt("001", 2));
-     jumpTable.put("JEQ", Integer.parseInt("010",2));
-     jumpTable.put("JGE", Integer.parseInt("011", 2));
-     jumpTable.put("JLT", Integer.parseInt("100", 2));
-     jumpTable.put("JNE", Integer.parseInt("101", 2));
-     jumpTable.put("JLE", Integer.parseInt("110",2));
-     jumpTable.put("JMP", Integer.parseInt("111",2));
+     jumpTable.put("null", "0b000");
+     jumpTable.put("JGT", "0b001");
+     jumpTable.put("JEQ", "0b010");
+     jumpTable.put("JGE", "0b011");
+     jumpTable.put("JLT", "0b100");
+     jumpTable.put("JNE", "0b101");
+     jumpTable.put("JLE", "0b110");
+     jumpTable.put("JMP", "0b111");
   }
   
   public String getLine() throws IOException{
