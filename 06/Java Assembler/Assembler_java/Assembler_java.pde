@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
+
 class Assembler {
      String inputLine = null; 
      Boolean endOfFile = false;
@@ -101,36 +102,90 @@ class Assembler {
          {
           //if(commandType == L_COMMAND){
             System.out.println(" Instr_A - Other COMMAND:");
-            String temp = instructionA; 
+            //String temp = instructionA; 
+            String temp = codeLine;
             String address2 = "0b111";
-           temp = temp.replaceAll(".*=", "");
-           temp = temp.replaceAll(";,*", "");
-           System.out.println("comp string = " + temp); 
-           System.out.println(compTable.get(temp)); 
+        //   temp = temp.replaceAll(".*=", "");
+        //   temp = temp.replaceAll(";,*", "");
+          
+           String tempComp = "";
+           String tempDest = "";
+           String tempJump = "";
+           
+           System.out.println("Command is: " + temp);
+           int index = temp.indexOf(";");
+           System.out.println(" ; index is " + index);
+           if (index > 0){
+             tempComp = temp.substring(0,index);
+             System.out.println("Comp is: " + tempComp);
+             tempJump = temp.substring(index+1);
+             System.out.println("Jump is: " + tempJump);
+           }
+            else{
+              index = temp.indexOf("=");
+              System.out.println(" = index is " + index);
+              if (index > 0){
+                 tempComp = temp.substring(index+1);
+                 System.out.println("Comp is: " + tempComp);
+                 tempDest = temp.substring(0,index);
+                 System.out.println("Dest is: " + tempDest);
+              }
+            }
+            
+     //      if (tempComp.length() == 0)
+     //      temp = temp.replaceAll(";,*", "");
+           
+           System.out.println("Instr string = " + temp); 
+     //      System.out.println(compTable.get(temp)); 
         //  String tempAddress = Integer.toBinaryString(compTable.get(temp));
          
-         Integer tempAddress = compTable.get(temp);
-         System.out.println("tempAddress Comp= " + tempAddress);
+       //  Integer tempAddress = compTable.get(temp);
+          Integer tempAddress = compTable.get(tempComp);
+          System.out.println("tempAddress Comp= " + tempAddress);
          if (tempAddress != null){
            System.out.println(Integer.toBinaryString(tempAddress));
-           address2 = address2 + Integer.toBinaryString(tempAddress); 
+           String compAddr = Integer.toBinaryString(tempAddress);
+           while(compAddr.length() < 7){
+             //compAddr = String.format("%0" + (7-compAddr.length()) + "d%s", 0, compAddr);
+             compAddr = "0" + compAddr;
+           }
+             System.out.println("tempAddress - Padded comp: " + compAddr);
+      //     address2 = address2 + Integer.toBinaryString(tempAddress); 
+           address2 = address2 + compAddr;  
+
            System.out.println("address 2: " + address2);
          }else
            address2 = address2 + "0000000";
          
-         tempAddress = destTable.get(temp);
+         //tempAddress = destTable.get(temp);
+         tempAddress = destTable.get(tempDest);
+         System.out.println("tempAddress Dest= " + tempAddress);
          if (tempAddress != null){
-           System.out.println("tempAddress Dest= " + tempAddress);
-           System.out.println(Integer.toBinaryString(tempAddress));    
-           address2 = address2 + Integer.toBinaryString(tempAddress);
+          // System.out.println("tempAddress Dest= " + tempAddress);
+           String destAddr = Integer.toBinaryString(tempAddress);
+         //  System.out.println(Integer.toBinaryString(tempAddress));
+          while(destAddr.length() < 3){
+             destAddr = "0" + destAddr;         
+           }
+           System.out.println("tempAddress - Padded dest: " + destAddr);
+           //address2 = address2 + Integer.toBinaryString(tempAddress);
+             address2 = address2 + destAddr;
            }else 
              address2 = address2 + "000";
      
-          tempAddress = jumpTable.get(temp);
+       //   tempAddress = jumpTable.get(temp);
+          tempAddress = jumpTable.get(tempJump);
+          System.out.println("tempAddress Jump= " + tempAddress);
          if (tempAddress != null){
            System.out.println("tempAddress Jump= " + tempAddress);
-           System.out.println(Integer.toBinaryString(tempAddress));
-           address2 = address2 + Integer.toBinaryString(tempAddress);          
+           String jumpAddr = Integer.toBinaryString(tempAddress);
+           while(jumpAddr.length() < 3){
+             jumpAddr = "0" + jumpAddr;
+           //  System.out.println("tempAddress - Padded jump: " + jumpAddr);
+           }
+            System.out.println("tempAddress - Padded jump: " + jumpAddr);
+       //    System.out.println(Integer.toBinaryString(tempAddress));
+           address2 = address2 + jumpAddr;          
          }else
            address2 = address2 + "000";
            System.out.println("address 2 Complete: " + address2);   
