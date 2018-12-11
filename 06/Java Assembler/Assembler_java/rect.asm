@@ -1,6 +1,6 @@
-@0
-D=M
-@INFINITE_LOOP
+  @0
+   D=M
+   @INFINITE_LOOP
    D;JLE 
    @counter
    M=D

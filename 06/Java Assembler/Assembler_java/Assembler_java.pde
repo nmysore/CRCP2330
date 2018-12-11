@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Scanner; 
+
+
 
 
 
@@ -40,10 +43,12 @@ class Assembler {
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
+ //  String outFile = fileName.substring(0,fileName.indexOf(".")) + ".hack";
    if (file != null) {  
       fileBuffer = new BufferedReader(new FileReader(file));
-      fileWriter = new WriteToFile("C:\\Users\\Nishad\\Documents\\SMU-Senior Year - Semester 1\\CRCP_2330_nand2tetris\\Assembler.hack");
-    //  fileWriter.initialize(file+".hack");
+    fileWriter = new WriteToFile("C:\\Users\\Nishad\\Documents\\SMU-Senior Year - Semester 1\\CRCP_2330_nand2tetris\\rect.hack"); //Hardcode to where you want exported
+  //   fileWriter = new WriteToFile("C:\\" + outFile); //Hardcode to where you want exported
+   //   fileWriter.initialize(file+".hack");
    }
   
   initializeSymbols(symbolTable); 
@@ -82,7 +87,11 @@ class Assembler {
      if (inputLine == null){
        endOfFile = true;
      }
-
+     String comments = "\\";
+   // if (inputLine.indexOf("/") != -1){
+     if (inputLine != null && inputLine.contains(comments)){
+      return;
+    }
 //     String hackOut;
      int commandType; 
       if(codeLine != null){ 
@@ -273,7 +282,7 @@ class Assembler {
       fileBuffer.close();
       return line;
     }
-    return line;
+    return line.trim();
 }
   
   
@@ -283,7 +292,8 @@ class Assembler {
            commandType = A_COMMAND; 
       }else 
       {
-       if(codeLine.charAt(0) == '('){
+      // if(codeLine.charAt(0) == '('){
+       if(codeLine.indexOf("(") == 0){
          commandType = L_COMMAND;
        }else
              {
@@ -338,9 +348,17 @@ class Assembler {
 
 
 void setup() { 
+  
+//  Scanner user_input = new Scanner(System.in);
+//  String fileName;
+//  System.out.print("Enter file name to be compiled using full path: ");
+//  fileName = user_input.next(); 
+//  user_input.close();
  try{
   
-  Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
+  Assembler aAssembler = new Assembler("C:\\assembly.txt"); //hardcode asm file here you want tested 
+//  System.out.println("Input file is: " + fileName);
+ // Assembler aAssembler = new Assembler(fileName);
   aAssembler.parserFirstPass(); 
   aAssembler.fileBuffer = new BufferedReader(new FileReader(aAssembler.file));
   
