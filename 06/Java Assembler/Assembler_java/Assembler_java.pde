@@ -3,6 +3,15 @@ import java.io.IOException;
 import java.io.BufferedReader; 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.PrintStream; 
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+
 
 
 class Assembler {
@@ -10,6 +19,10 @@ class Assembler {
      Boolean endOfFile = false;
      String file;
      BufferedReader fileBuffer; 
+     WriteToFile fileWriter;
+     
+  //   PrintStream hackOutFile = new PrintStream(new File("hackOutputFile.hack"));
+  //   PrintStream console = System.out;
      
      int A_COMMAND = 0;
      int C_COMMAND = 1;
@@ -22,12 +35,16 @@ class Assembler {
    private Map<String, Integer > compTable = new HashMap<String,Integer>(100);
    private Map<String, Integer> destTable = new HashMap<String,Integer>(100);
    private Map<String, Integer> jumpTable = new HashMap<String,Integer>(100);
+
+
      
   public Assembler(String fileName) throws IOException{
    file = fileName;  
-   if (file != null)
-     
-  fileBuffer = new BufferedReader(new FileReader(file));
+   if (file != null) {  
+      fileBuffer = new BufferedReader(new FileReader(file));
+      fileWriter = new WriteToFile("C:\\Users\\Nishad\\Documents\\SMU-Senior Year - Semester 1\\CRCP_2330_nand2tetris\\Assembler.hack");
+    //  fileWriter.initialize(file+".hack");
+   }
   
   initializeSymbols(symbolTable); 
   initializeComp(compTable);
@@ -43,7 +60,6 @@ class Assembler {
        commandType = getCommand(codeLine);
        if(commandType == A_COMMAND || commandType == C_COMMAND){
          currentLine++;
- //       System.out.println("Command = " + commandType + "---Code = " + codeLine); 
        }else
        {
         if(commandType == L_COMMAND){
@@ -51,8 +67,6 @@ class Assembler {
             symbolTable.put(codeLine.substring(1, codeLine.length()-1), currentLine);
         }
        }
-
-  //     System.out.println(" Finishing FirsttPass - :" + codeLine); 
        codeLine = getLine(); 
      }
      
@@ -68,7 +82,7 @@ class Assembler {
      if (inputLine == null){
        endOfFile = true;
      }
- //    System.out.println(" In ParseNextPass - :" + codeLine); 
+
 //     String hackOut;
      int commandType; 
       if(codeLine != null){ 
@@ -79,37 +93,31 @@ class Assembler {
          String instrAddr = "";
          if(!Character.isDigit(instructionA.charAt(0))){
            if (!symbolTable.containsKey(instructionA)){
-            symbolTable.put(instructionA, currentAddress);
-           // System.out.println(" Instr_A - A_COMMAND:" + instructionA); 
-            address = currentAddress;
-           // System.out.println("hack_Out New Symbol: ");
-           instrAddr = Integer.toBinaryString(address).replace(' ','0');
-  //         while (instrAddr.length() < 16){
-    //         instrAddr = "0" + instrAddr;
-      //     }
-           
-           // System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
-            currentAddress++;
+              symbolTable.put(instructionA, currentAddress); // new symbol, add to table
+              address = currentAddress;
+              instrAddr = Integer.toBinaryString(address).replace(' ','0');           
+              currentAddress++;
            }else{
-             address = symbolTable.get(instructionA);
-          //   System.out.println("hack_Out Exixting Symbol: ");
+             address = symbolTable.get(instructionA); // already exists;
              instrAddr = Integer.toBinaryString(address).replace(' ','0');
-       //      System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
            }
          }else{
-         //  System.out.println("hack_Out Non_Symbol: ");
+         //  Non_Symbol A Instruction: ");
            instrAddr = Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0');
-       //    System.out.println(String.format("%16s", Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0')));
          }
          
            while (instrAddr.length() < 16){
              instrAddr = "0" + instrAddr;
            } 
+     //      System.setOut(console);
            System.out.println(instrAddr);
+           fileWriter.Write(instrAddr);
+           
+     //      System.setOut(hackOutFile);
+     //      System.out.println(instrAddr);
          }else
          {
           //other command types
-         //   System.out.println(" Instr_A - Other COMMAND:");
             String temp = codeLine;
             String address2 = "0b111";
            
@@ -117,77 +125,61 @@ class Assembler {
            String tempDest = "";
            String tempJump = "";
            
-      //    System.out.println("Command is: " + temp);
            int index = temp.indexOf(";");
-       //    System.out.println(" ; index is " + index);
            if (index > 0){
              tempComp = temp.substring(0,index);
-        //     System.out.println("Comp is: " + tempComp);
              tempJump = temp.substring(index+1);
-        //     System.out.println("Jump is: " + tempJump);
            }
             else{
               index = temp.indexOf("=");
-        //      System.out.println(" = index is " + index);
               if (index > 0){
                  tempComp = temp.substring(index+1);
-         //       System.out.println("Comp is: " + tempComp);
                  tempDest = temp.substring(0,index);
-         //        System.out.println("Dest is: " + tempDest);
               }
             }
-                     
-      //     System.out.println("Instr string = " + temp); 
-         
-          Integer tempAddress = compTable.get(tempComp);
-     //     System.out.println("tempAddress Comp= " + tempAddress);
+                              
+         Integer tempAddress = compTable.get(tempComp);
          if (tempAddress != null){
-     //      System.out.println(Integer.toBinaryString(tempAddress));
            String compAddr = Integer.toBinaryString(tempAddress);
            while(compAddr.length() < 7){
              compAddr = "0" + compAddr;
            }
-     //        System.out.println("tempAddress - Padded comp: " + compAddr);
            address2 = address2 + compAddr;  
 
-     //      System.out.println("address 2: " + address2);
          }else
            address2 = address2 + "0000000";
          
          tempAddress = destTable.get(tempDest);
-     //    System.out.println("tempAddress Dest= " + tempAddress);
          if (tempAddress != null){
            String destAddr = Integer.toBinaryString(tempAddress);
           while(destAddr.length() < 3){
              destAddr = "0" + destAddr;         
            }
-     //      System.out.println("tempAddress - Padded dest: " + destAddr);
            address2 = address2 + destAddr;
            }else 
              address2 = address2 + "000";
      
-          tempAddress = jumpTable.get(tempJump);
-   //       System.out.println("tempAddress Jump= " + tempAddress);
+         tempAddress = jumpTable.get(tempJump);
          if (tempAddress != null){
-   //        System.out.println("tempAddress Jump= " + tempAddress);
            String jumpAddr = Integer.toBinaryString(tempAddress);
            while(jumpAddr.length() < 3){
-             jumpAddr = "0" + jumpAddr;
-          
+             jumpAddr = "0" + jumpAddr;         
            }
-    //        System.out.println("tempAddress - Padded jump: " + jumpAddr);
            address2 = address2 + jumpAddr;          
          }else
            address2 = address2 + "000";
-           System.out.println(address2.substring(2));   
+           
+   //        System.setOut(console);
+           System.out.println(address2.substring(2)); 
+           fileWriter.Write(address2.substring(2));
+     //      System.setOut(hackOutFile);
+     //      System.out.println(address2.substring(2));
          }   
      }  
-return;
-     }
+  return;
+}
 
-     
-   
-   
+       
   private void initializeSymbols(Map hashTable){
     
     //mapping addresses of predefined symbols 
@@ -277,7 +269,6 @@ return;
   public String getLine() throws IOException{
     String line = "Error";
     line = fileBuffer.readLine();
-//    System.out.println("getLine: " + line);
     if (line == null) {
       fileBuffer.close();
       return line;
@@ -288,8 +279,8 @@ return;
   
   public int getCommand(String codeLine){
     int commandType = 9; //Error situation 
-      if(codeLine.charAt(0) == '@'){
-         commandType = A_COMMAND; 
+     if(codeLine.indexOf("@") == 0){
+           commandType = A_COMMAND; 
       }else 
       {
        if(codeLine.charAt(0) == '('){
@@ -304,23 +295,63 @@ return;
   
 }
 
+
+  public class WriteToFile {
+ 
+            
+        BufferedWriter bufferedWriter = null;
+        File myFile = null; //new File(fileName);
+        Writer writer = null; //new FileWriter(myFile);
+        // bufferedWriter = new BufferedWriter(writer);
+        
+  public WriteToFile(String fileName ) {
+        try {
+           // String strContent = "This example shows how to write string content to a file";
+              myFile = new File(fileName);
+            // check if file exist, otherwise create the file before writing
+              if (!myFile.exists()) {
+                myFile.createNewFile();
+            }
+            writer = new FileWriter(myFile);
+            bufferedWriter = new BufferedWriter(writer);
+          //  bufferedWriter.write(strContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
+    
+    public void Write(String hackOutput) throws IOException{
+      
+       bufferedWriter.write(hackOutput);
+       bufferedWriter.newLine();
+       
+     }
+     
+     public void Close(){
+           try{
+                if(bufferedWriter != null) bufferedWriter.close();
+            } catch(Exception ex){
+                 
+            }      
+     }
+   }
+
+
 void setup() { 
  try{
+  
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
   aAssembler.parserFirstPass(); 
-//  System.out.println("inputLIne after first pass: " + aAssembler.inputLine);
-//  System.out.println("fileBuffer after first pass: " + aAssembler.fileBuffer);
   aAssembler.fileBuffer = new BufferedReader(new FileReader(aAssembler.file));
-//  System.out.println("fileBuffer after init: " + aAssembler.fileBuffer);
   
   while(!aAssembler.endOfFile){
    aAssembler.parserNextPass();
-//  System.out.println(aAssembler.inputLine);
-//  System.out.println(aAssembler.inputLine);
- }
+   }
+  aAssembler.fileWriter.Close();
  } 
  catch(IOException ex1){
    ex1.printStackTrace();
  }
+ 
  return;
 }
