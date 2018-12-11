@@ -43,7 +43,9 @@ class Assembler {
        commandType = getCommand(codeLine);
        if(commandType == A_COMMAND || commandType == C_COMMAND){
          currentLine++;
- //       System.out.println("Command = " + commandType + "---Code = " + codeLine); 
+        System.out.println("Command = " + commandType + "---Code = " + codeLine); 
+        // System.out.println(codeLine);
+       // codeLine = getLine(); 
        }else
        {
         if(commandType == L_COMMAND){
@@ -52,7 +54,7 @@ class Assembler {
         }
        }
 
-  //     System.out.println(" Finishing FirsttPass - :" + codeLine); 
+       System.out.println(" Finishing FirsttPass - :" + codeLine); 
        codeLine = getLine(); 
      }
      
@@ -60,6 +62,7 @@ class Assembler {
      {
        fileBuffer.close();
      }
+ //    fileBuffer = new BufferedReader(new FileReader(file));
    }  
    
     public void parserNextPass() throws IOException{
@@ -68,123 +71,151 @@ class Assembler {
      if (inputLine == null){
        endOfFile = true;
      }
- //    System.out.println(" In ParseNextPass - :" + codeLine); 
+     System.out.println(" In ParseNextPass - :" + codeLine); 
 //     String hackOut;
      int commandType; 
+//     while(codeLine != null){
       if(codeLine != null){ 
        commandType = getCommand(codeLine);
        String instructionA = codeLine.substring(1);
        if(commandType == A_COMMAND){
+ //        String instructionA = codeLine.substring(1);
          Integer address=0;
-         String instrAddr = "";
          if(!Character.isDigit(instructionA.charAt(0))){
            if (!symbolTable.containsKey(instructionA)){
             symbolTable.put(instructionA, currentAddress);
-           // System.out.println(" Instr_A - A_COMMAND:" + instructionA); 
+            System.out.println(" Instr_A - A_COMMAND:" + instructionA); 
             address = currentAddress;
-           // System.out.println("hack_Out New Symbol: ");
-           instrAddr = Integer.toBinaryString(address).replace(' ','0');
-  //         while (instrAddr.length() < 16){
-    //         instrAddr = "0" + instrAddr;
-      //     }
-           
-           // System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
+            System.out.println("hack_Out New Symbol: ");
+            System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
             currentAddress++;
            }else{
              address = symbolTable.get(instructionA);
-          //   System.out.println("hack_Out Exixting Symbol: ");
-             instrAddr = Integer.toBinaryString(address).replace(' ','0');
-       //      System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
+             System.out.println("hack_Out Exixting Symbol: ");
+             System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
            }
          }else{
-         //  System.out.println("hack_Out Non_Symbol: ");
-           instrAddr = Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0');
-       //    System.out.println(String.format("%16s", Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0')));
+           System.out.println("hack_Out Non_Symbol: ");
+           System.out.println(String.format("%16s", Integer.toBinaryString(Integer.parseInt(instructionA)).replace(' ','0')));
          }
-         
-           while (instrAddr.length() < 16){
-             instrAddr = "0" + instrAddr;
-           } 
-           System.out.println(instrAddr);
          }else
          {
-          //other command types
-         //   System.out.println(" Instr_A - Other COMMAND:");
+          //if(commandType == L_COMMAND){
+            System.out.println(" Instr_A - Other COMMAND:");
+            //String temp = instructionA; 
             String temp = codeLine;
             String address2 = "0b111";
-           
+        //   temp = temp.replaceAll(".*=", "");
+        //   temp = temp.replaceAll(";,*", "");
+          
            String tempComp = "";
            String tempDest = "";
            String tempJump = "";
            
-      //    System.out.println("Command is: " + temp);
+           System.out.println("Command is: " + temp);
            int index = temp.indexOf(";");
-       //    System.out.println(" ; index is " + index);
+           System.out.println(" ; index is " + index);
            if (index > 0){
              tempComp = temp.substring(0,index);
-        //     System.out.println("Comp is: " + tempComp);
+             System.out.println("Comp is: " + tempComp);
              tempJump = temp.substring(index+1);
-        //     System.out.println("Jump is: " + tempJump);
+             System.out.println("Jump is: " + tempJump);
            }
             else{
               index = temp.indexOf("=");
-        //      System.out.println(" = index is " + index);
+              System.out.println(" = index is " + index);
               if (index > 0){
                  tempComp = temp.substring(index+1);
-         //       System.out.println("Comp is: " + tempComp);
+                 System.out.println("Comp is: " + tempComp);
                  tempDest = temp.substring(0,index);
-         //        System.out.println("Dest is: " + tempDest);
+                 System.out.println("Dest is: " + tempDest);
               }
             }
-                     
-      //     System.out.println("Instr string = " + temp); 
+            
+     //      if (tempComp.length() == 0)
+     //      temp = temp.replaceAll(";,*", "");
+           
+           System.out.println("Instr string = " + temp); 
+     //      System.out.println(compTable.get(temp)); 
+        //  String tempAddress = Integer.toBinaryString(compTable.get(temp));
          
+       //  Integer tempAddress = compTable.get(temp);
           Integer tempAddress = compTable.get(tempComp);
-     //     System.out.println("tempAddress Comp= " + tempAddress);
+          System.out.println("tempAddress Comp= " + tempAddress);
          if (tempAddress != null){
-     //      System.out.println(Integer.toBinaryString(tempAddress));
+           System.out.println(Integer.toBinaryString(tempAddress));
            String compAddr = Integer.toBinaryString(tempAddress);
            while(compAddr.length() < 7){
+             //compAddr = String.format("%0" + (7-compAddr.length()) + "d%s", 0, compAddr);
              compAddr = "0" + compAddr;
            }
-     //        System.out.println("tempAddress - Padded comp: " + compAddr);
+             System.out.println("tempAddress - Padded comp: " + compAddr);
+      //     address2 = address2 + Integer.toBinaryString(tempAddress); 
            address2 = address2 + compAddr;  
 
-     //      System.out.println("address 2: " + address2);
+           System.out.println("address 2: " + address2);
          }else
            address2 = address2 + "0000000";
          
+         //tempAddress = destTable.get(temp);
          tempAddress = destTable.get(tempDest);
-     //    System.out.println("tempAddress Dest= " + tempAddress);
+         System.out.println("tempAddress Dest= " + tempAddress);
          if (tempAddress != null){
+          // System.out.println("tempAddress Dest= " + tempAddress);
            String destAddr = Integer.toBinaryString(tempAddress);
+         //  System.out.println(Integer.toBinaryString(tempAddress));
           while(destAddr.length() < 3){
              destAddr = "0" + destAddr;         
            }
-     //      System.out.println("tempAddress - Padded dest: " + destAddr);
-           address2 = address2 + destAddr;
+           System.out.println("tempAddress - Padded dest: " + destAddr);
+           //address2 = address2 + Integer.toBinaryString(tempAddress);
+             address2 = address2 + destAddr;
            }else 
              address2 = address2 + "000";
      
+       //   tempAddress = jumpTable.get(temp);
           tempAddress = jumpTable.get(tempJump);
-   //       System.out.println("tempAddress Jump= " + tempAddress);
+          System.out.println("tempAddress Jump= " + tempAddress);
          if (tempAddress != null){
-   //        System.out.println("tempAddress Jump= " + tempAddress);
+           System.out.println("tempAddress Jump= " + tempAddress);
            String jumpAddr = Integer.toBinaryString(tempAddress);
            while(jumpAddr.length() < 3){
              jumpAddr = "0" + jumpAddr;
-          
+           //  System.out.println("tempAddress - Padded jump: " + jumpAddr);
            }
-    //        System.out.println("tempAddress - Padded jump: " + jumpAddr);
+            System.out.println("tempAddress - Padded jump: " + jumpAddr);
+       //    System.out.println(Integer.toBinaryString(tempAddress));
            address2 = address2 + jumpAddr;          
          }else
            address2 = address2 + "000";
-           System.out.println(address2.substring(2));   
-         }   
-     }  
+           System.out.println("address 2 Complete: " + address2);   
+ 
+         }
+         
+     //     System.out.println("Shifted Address: " + address2);
+   //        Integer tempInt = Integer.parseInt(tempAddress);
+    //       System.out.println("tempInt = " + tempInt);
+        //    Integer comp = Integer.parseInt(compTable.get(temp));
+          //  System.out.println("comp string = " + temp);
+       //     System.out.println("comp = " + comp);
+        //    Integer dest = Integer.parseInt(destTable.get(instructionA));
+        //    System.out.println("dest = " + dest);
+        //    Integer jump = Integer.parseInt(jumpTable.get(instructionA));
+        //    System.out.println("jump = " + jump);
+        //    Integer address2 = 0b1110000000000000 + (comp << 6) + (dest << 3) + jump; 
+         //   System.out.println(String.format("%16s", Integer.toBinaryString(address2).replace(' ','0')));
+         //   Integer address2 = 0b1110000000000000 + (compTable.get(instructionA) << 6) + (destTable.get(instructionA) << 3) + (jumpTable.get(instructionA)); 
+        //  }
+       // System.out.println("Command = " + commandType + " --- Code = " + codeLine); 
+        // System.out.println(codeLine);
+       // codeLine = getLine(); 
+      // }
+     }
+   //    codeLine = getLine(); 
+      // System.out.println(String.format("%16s", Integer.toBinaryString(address).replace(' ','0')));
 return;
      }
-
+//   }
      
    
    
@@ -220,6 +251,10 @@ return;
   
    private void initializeComp(Map compTable){
    //mapping comps using binary literals
+   /* compTable.put("M", Integer.parseInt("1110000", 2));
+    
+    compTable.put("D", Integer.parseInt("0001100" , 2));
+    compTable.put("D+A", Integer.parseInt("0000010" , 2));*/
     
     compTable.put("0", Integer.parseInt("0101010", 2));
     compTable.put("1", Integer.parseInt("0111111", 2));
@@ -250,6 +285,35 @@ return;
     compTable.put("D&M",Integer.parseInt("1000000", 2));
     compTable.put("D|M",Integer.parseInt("1010101", 2));
     
+    
+ /*   compTable.put("1", "0b0111111");
+    compTable.put("-1", "0b0111010");
+    compTable.put("D", "0b0001100");
+    compTable.put("A", "0b0110000");
+    compTable.put("!D", "0b0001101");
+    compTable.put("!A", "0b0110001");
+    compTable.put("-D", "0b0001111");
+    compTable.put("-A", "0b0110011");
+    compTable.put("D+1", "0b0011111");
+    compTable.put("A+1", "0b0110111");
+    compTable.put("D-1", "0b0001110");
+    compTable.put("A-1", "0b0110010");
+    compTable.put("D+A", "0b0000010");
+    compTable.put("D-A", "0b0010011");
+    compTable.put("A-D", "0b0000111");
+    compTable.put("D&A", "0b0000000");
+    compTable.put("D|A", "0b0010101");
+    compTable.put("M", "0b1110000");
+    compTable.put("!M", "0b1110001");
+    compTable.put("-M", "0b1110011");
+    compTable.put("M+1", "0b1110111");
+    compTable.put("M-1", "0b1110010");
+    compTable.put("D+M", "0b1000010");
+    compTable.put("D-M", "0b1010011");
+    compTable.put("M-D", "0b1000111");
+    compTable.put("D&M", "0b1000000");
+    compTable.put("D|M", "0b1010101");*/
+    
    }
   
   private void initializeDest(Map destTable){
@@ -277,7 +341,7 @@ return;
   public String getLine() throws IOException{
     String line = "Error";
     line = fileBuffer.readLine();
-//    System.out.println("getLine: " + line);
+    System.out.println("getLine: " + line);
     if (line == null) {
       fileBuffer.close();
       return line;
@@ -304,23 +368,55 @@ return;
   
 }
 
+// void setup(String args[]) {
 void setup() { 
+//   BufferedReader fileBuffer; 
+//  fileBuffer = createReader("assemblyin.txt");
+ /* if(args.length == 0) {
+  System.err.println("Specify a file name");
+  return; 
+ }else 
+ {
+  if(args.length > 1) {
+  System.err.println("Specify only 1 file");
+  return;   
+  } 
+ }*/
+ //String inputLine = null;
+// Boolean eof = false;
+// String file = args[0];
+ 
  try{
   Assembler aAssembler = new Assembler("C:\\assemblyin.txt");
   aAssembler.parserFirstPass(); 
-//  System.out.println("inputLIne after first pass: " + aAssembler.inputLine);
-//  System.out.println("fileBuffer after first pass: " + aAssembler.fileBuffer);
+  System.out.println("inputLIne after first pass: " + aAssembler.inputLine);
+  System.out.println("fileBuffer after first pass: " + aAssembler.fileBuffer);
   aAssembler.fileBuffer = new BufferedReader(new FileReader(aAssembler.file));
-//  System.out.println("fileBuffer after init: " + aAssembler.fileBuffer);
+  System.out.println("fileBuffer after init: " + aAssembler.fileBuffer);
   
   while(!aAssembler.endOfFile){
+  //inputLine =  aAssembler.getLine();
    aAssembler.parserNextPass();
-//  System.out.println(aAssembler.inputLine);
-//  System.out.println(aAssembler.inputLine);
+   /*if (inputLine == null){
+     eof=true;
+     //continue;
+  }/*else
+  {
+   aAssembler.parserNextPass(); 
+  }*/
+  System.out.println(aAssembler.inputLine);
+  //remove comments
+//  inputLine = inputLine.replaceAll("\\s","");
+ // inputLine = inputLine.replaceAll("//","");
+ // inputLine = inputLine.replaceAll("/\\*","");
+  System.out.println(aAssembler.inputLine);
+
+    
  }
  } 
  catch(IOException ex1){
    ex1.printStackTrace();
  }
+// System.out.println(inputLine);
  return;
 }
